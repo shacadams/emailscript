@@ -1,0 +1,2 @@
+# emailscript
+email bash
