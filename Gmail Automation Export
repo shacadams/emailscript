@@ -1,0 +1,40 @@
+$email = "Enter Email Address Being Sent From Here" 
+
+$emailTo = "Enter Email That Will Receive The Email"
+
+#App Password generated from Google email account that will be dedicated for this purpose only.  Do not use this account for any other purposes outside of related automation
+$pass = "Enter AppPassword Here" 
+ 
+$smtpServer = "smtp.gmail.com" 
+
+#attach any file to send, via it's file path here.  Keep in mind that email servers have a send limit of ~25MB file size.  Duplicate the line and change the path for more than one attachements. 
+$attachment = "Enter path to file here EG. C:\Users\Admin\filename.something" 
+
+#The following lines generate the email and pull in the attachement.  
+$msg = new-object Net.Mail.MailMessage 
+$smtp = new-object Net.Mail.SmtpClient($smtpServer) 
+$smtp.EnableSsl = $true 
+$msg.From = "$email"  
+$msg.To.Add("$emailTo") 
+$msg.BodyEncoding = [system.Text.Encoding]::Unicode 
+$msg.SubjectEncoding = [system.Text.Encoding]::Unicode 
+$msg.IsBodyHTML = $true  
+$msg.Attachments.Add($attachment) 
+
+#the next block of lines is where you can change Subject, Body, and add additional body information. 
+
+#Email subject text goes in this line. 
+$msg.Subject = "Enter Email Subject here" 
+
+#body text goes into here and can be formatted with HTML 
+
+$msg.Body = "<h2>Message Body Text Goes Here - IF needed </h2> 
+</br> 
+This one should have an attachment
+"  
+
+#Code to pull in the credentials listed above.  These can be encrypted but I do not think it is necessary as it will live on the Build server, never to see an unencrptyed network again. 
+$SMTP.Credentials = New-Object System.Net.NetworkCredential("$email", "$pass"); 
+
+#Sends the email.  
+$smtp.Send($msg)
